@@ -54,22 +54,25 @@ class MaxStack:
         if self.tail is None:
             raise Exception("Stack is empty")
 
-        # need to find the max value in the sorted_dict first
+        # need to find the max value in the sorted_dict first - O(log n) operation
         max_value = self.sorted_dict.keys()[-1]
         # then we need to find the node with the max value in the list
         max_node = self.sorted_dict[max_value][-1] # the last node in the list is the max node
         # remove the node from the list
         self.sorted_dict[max_value].remove(max_node)
+
         if len(self.sorted_dict[max_value]) == 0:
             del self.sorted_dict[max_value]
 
         # if the node is the tail, update the tail to the previous node
         if max_node == self.tail:
             self.tail = max_node.prev
-            self.tail.next = None
+            if self.tail is not None: # if stack is empty as this point
+                self.tail.next = None
         elif max_node == self.head:
             self.head = max_node.next
-            self.head.prev = None
+            if self.head is not None: # if stack is empty as this point
+                self.head.prev = None
         else:
             # disconnect the node from the doubly linked list
             # the previous node's next should point to the next node        
@@ -83,7 +86,7 @@ class MaxStack:
     def peek(self) -> int:
         return self.tail.value
 
-    def peekMax(self) -> int:
+    def peekMax(self) -> int: # O(log n) operation
         return self.sorted_dict.keys()[-1] # the last key in the sorted_dict is the max value
 
 if __name__ == "__main__":
