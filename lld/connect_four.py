@@ -113,6 +113,7 @@ class Board:
         for dr, dc in directions:
             count = 1 # count the disc at the current position and we check above about same color already
             count += self._countDiscsInDirection(row, column, disc_color, dr, dc)
+            # the second check is for the opposite direction
             count += self._countDiscsInDirection(row, column, disc_color, -dr, -dc)
             if count >= 4:
                 return True
@@ -142,6 +143,7 @@ class Board:
         return False
 
     # booard is full, when all the cells on the board are not None
+    # if one of the cells is None, the board is not full, return false
     def is_full(self) -> bool:
         for row in range(self.no_rows):
             for col in range(self.no_columns):
