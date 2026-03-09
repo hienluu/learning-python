@@ -101,7 +101,7 @@ class Board:
             (0, 1), # horizontal
             (1, 0), # vertical
             (1, 1), # diagonal right up
-            (-1, 1), # diagonal left down
+            (-1, 1), # diagonal right down
         ]
 
         if not self._is_valid_position(row, column):
