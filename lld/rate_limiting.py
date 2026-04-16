@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Dict, List, Optional
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -33,15 +34,17 @@ class TokenBucketLimiter(Limiter):
         now = int(time.time() * 1000) # current time in milliseconds
         elapsed = now - bucket.last_refill_time # time since last refill in milliseconds
         tokens_to_add = (elapsed * self._refill_rate_per_second) / 1000 # calculate how many tokens to add based on elapsed time
+        bucket.tokens = min(bucket.tokens + tokens_to_add, self._capacity)
         bucket.last_refill_time = now # update last refill time
 
         if bucket.tokens >= 1:
             bucket.tokens -= 1 # consume a token
             remaining = int(bucket.tokens)
             return RateLimitResult(allowed=True, remaining=remaining, retry_after_ms=None)
-        
-        tokens_needed = 1 - bucket.tokens
-        retry_after_ms = int ((tokens_needed * 1000) / self._refill_rate_per_second)
+        else:                    
+            tokens_needed = 1 - bucket.tokens
+            retry_after_ms = ceil ((tokens_needed * 1000) / self._refill_rate_per_second)
+            return RateLimitResult(allowed=False, remaining=0, retry_after_ms=retry_after_ms)
 
 @dataclass 
 class RateLimitResult:
@@ -74,3 +77,14 @@ class LimiterFactory:
 
 class RateLimiter:
     def __init__(self, configs: List[Dict], default_config: Dict):
+        factory = LimiterFactory()
+        self._limiters: Dict[str, Limiter] = {}
+
+        for config in configs:
+            endpoint = config.get("endpoint")
+            if endpoint is None:
+                continue
+            limiter = factory.create(config)
+            self.limiter[endpoint] = limiter
+
+        self._default_limiter = factory.create(default_config)

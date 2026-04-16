@@ -14,6 +14,8 @@
 #   - current floor
 #   _ direction (up, down, idle)
 #   - request_queue
+from enum import Enum
+from typing import Optional
 
 class ElevatorDirection(Enum):
     UP = "up"
