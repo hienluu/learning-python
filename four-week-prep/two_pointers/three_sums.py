@@ -53,7 +53,7 @@ def three_sums(nums: list[int]) -> list[list[int]]:
             # since the array is sorted, no need to continue if the first number is > 0
             break  
 
-        # this works because the array is sorted, so duplicates are adjacent
+        # this works because the array is sorted, so duplicates are adjacent by comparing current and previous numbers
         if i > 0 and nums[i] == nums[i - 1]:   # skip duplicate first numbers
           continue
 
@@ -99,5 +99,6 @@ if __name__ == "__main__":
     test_three_sums([0, 0, 0, 0], [[0, 0, 0]])
     test_three_sums([0, 1,1], [])
     test_three_sums([-2, 0, 1, 1, 2], [[-2, 0, 2], [-2, 1, 1]])
+    test_three_sums([-2, 0, 0, 2, 2], [[-2,0,2]])
 
     
