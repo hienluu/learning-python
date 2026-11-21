@@ -40,23 +40,34 @@ Building the key with str(counts) works but is slower and easy to get wrong. Pre
 
 Complexity (count-key version)
 
-Time O(n · k): n words, and for each you scan its k letters once to fill the counts. Building the 26-length tuple is O(26), which is constant. Dict lookups are O(1) on average, though hashing the tuple is that same constant 26.
-Space O(n · k): every character ends up stored once in the output groups, plus at most n keys of 26 ints each.
+Time O(n · k): 
+  - n words, and for each you scan its k letters once to fill the counts. 
+  - Building the 26-length tuple is O(26), which is constant. 
+  -Dict lookups are O(1) on average, though hashing the tuple is that same constant 26.
+
+Space O(n · k): 
+- every character ends up stored once in the output groups, plus at most n keys of 26 ints each.
+
 With the sorted key, time becomes O(n · k log k) because of the sort per word.
 """
 
 from collections import defaultdict
-from typing import List
 
 def group_anagrams(words : list[str]) -> list[list[str]]:
     # map each letter count signature to a list words
     # automatically provides a default value for a key that doesn't exist yet, 
     # preventing KeyError exceptions when retrieving or modifying missing keys
+    # passing in a list as the default value means that if a key is missing, it will be initialized with an empty list
     groups = defaultdict(list)
 
     a_ord = ord('a')
+
+    # for each word in the input list
+    # - we will compute its signature and add it to the corresponding group in the dictionary
     for word in words:
         # list is not hashable
+        # counting characters in the word and storing the counts in a list of length 26, 
+        # - where each index corresponds to a letter in the alphabet
         counts: list[int] = [0] * 26
         for char in word:
             counts[ord(char) - a_ord] += 1
@@ -66,6 +77,8 @@ def group_anagrams(words : list[str]) -> list[list[str]]:
         print(f"Word: {word}, Signature: {signature}")
         groups[signature].append(word)
 
+    # return the list of groups of anagrams using shallow copy of the values in the dictionary, 
+    # - which are lists of words that share the same signature
     return list(groups.values())
 
 

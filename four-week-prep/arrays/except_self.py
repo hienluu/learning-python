@@ -45,6 +45,7 @@ Two linear passes give O(n) time. The output array is required, so extra space i
 just the one running variable.
 """
 
+# brute force approach: using two nested loops, skip i = j
 def except_self_bf(nums: list[int]) -> list[int]:
     print(f"\n bf -Input: {nums}")
     # brute force approach: using two nested loops, skip i = j
@@ -67,7 +68,7 @@ def except_self(nums: list[int]) -> list[int]:
     answer = [1] * n
 
     # [1,2,3,4] as an example, prefix is [1,1,2,6]
-    # build the prefix
+    # build the prefix, which is updated as we go from left to right
     prefix = 1
     for i in range(n):
         answer[i] = prefix
@@ -75,7 +76,7 @@ def except_self(nums: list[int]) -> list[int]:
 
     print(f"Prefix products: {answer}")
     
-    print# build the suffix - going from right to left
+    # build the suffix - going from right to left
     suffix = 1
     # range(start, stop, step) where start = n-1, stop = -1 (exclusive), step = -1
     for i in range(n-1, -1, -1):
@@ -87,10 +88,17 @@ def except_self(nums: list[int]) -> list[int]:
 
 if __name__ == "__main__":
     nums = [1, 2, 3, 4]
+    print(f"==========> input: {nums} <=============")
     print(f"from brute force: {except_self_bf(nums)}")
     print(f"from optimal: {except_self(nums)}")
 
     
     nums = [4,3,2, 1]
+    print(f"==========> input: {nums} <=============")
+    print(f"from brute force: {except_self_bf(nums)}")
+    print(f"from optimal: {except_self(nums)}")
+
+    nums = [-1,1,0,-3,3] 
+    print(f"==========> input: {nums} <=============")
     print(f"from brute force: {except_self_bf(nums)}")
     print(f"from optimal: {except_self(nums)}")

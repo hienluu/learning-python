@@ -44,13 +44,8 @@ def me(s: str) -> int:
 
 def test_longest_window_substring(str:str, expected:int):
     print(f"Testing longest_window_substring('{str}')"  )
-    assert me("abcabcbb") == 3
-    assert longest_window_substring("bbbbb") == 1
-    assert longest_window_substring("pwwkew") == 3
-    assert longest_window_substring("") == 0
-    assert longest_window_substring(" ") == 1
-    assert longest_window_substring("au") == 2
-    assert longest_window_substring("dvdf") == 3
+    result = longest_window_substring(str)
+    assert result == expected, f"Expected {expected}, but got {result}"
 
 if __name__ == "__main__":
     test_longest_window_substring("abcabcbb",3)  # Output: 3
@@ -60,3 +55,4 @@ if __name__ == "__main__":
     test_longest_window_substring(" ",1)          # Output: 1
     test_longest_window_substring("au",2)         # Output: 2
     test_longest_window_substring("dvdf",3)       # Output: 3
+    test_longest_window_substring("abcdef",6)     # Output: 6
