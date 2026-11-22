@@ -38,7 +38,10 @@ Complexity
 """
 
 def search_rotated_sorted_array(nums:list[int], target:int) -> int:
-    lo, hi = 0, len(nums) - 1
+    if not nums:
+        return -1
+    
+    lo, hi = 0, len(nums) - 1 # inclusive
 
     # since hi is inclusive, we need to check lo <= hi, not lo < hi
     while lo <= hi:
@@ -69,15 +72,29 @@ Comparing nums[mid] with nums[hi] tells you which side of mid
   - nums[mid] <= nums[hi]: mid..hi is in sorted order, so nothing to the right of mid is smaller. mid itself could be the minimum,
     so you keep it
     with hi = mid rather than mid - 1.
+
+The minimum sits at the drop, and the drop is always in the half that isn't sorted.
+So the rule is: go toward the unsorted half, and if both halves are sorted, keep moving left
+
+inside the loop, lo < hi, so mid = (lo + hi) // 2 always satisfies lo <= mid < hi. 
+  - Rounding down means mid never reaches hi
+  - lo = mid + 1: since mid < hi, the new lo is at most hi. It can catch up to hi but can't go past it.
+  - hi = mid: since mid >= lo, the new hi is at least lo. It can catch up to lo but can't go below it.
 """
 def min_rotated_sorted_array(nums:list[int]) -> int:
+    if not nums:
+        return -1
+    
     lo, hi = 0, len(nums) - 1
 
+    # we are not looking for a target, but keep looking until lo => hi, by 
     while lo < hi:
         mid = (lo + hi) // 2
-        if nums[mid] > nums[hi]: # min is in the right half
+        if nums[mid] > nums[hi]: 
+            # min is in the right half
             lo = mid + 1
-        else: # min is in the left half
+        else: 
+            # min is in the left half
             hi = mid
 
     return nums[lo]
@@ -160,6 +177,7 @@ if __name__ == "__main__":
     test_min_rotated_sorted_array([4,5,6,7,0,1,2], 0)
     test_min_rotated_sorted_array([3,4,5,1,2], 1)
     test_min_rotated_sorted_array([2,3,4,5,1], 1)
+    test_min_rotated_sorted_array([0, 1, 2, 4, 5, 6, 7], 0)
 
 
     # test find_max
