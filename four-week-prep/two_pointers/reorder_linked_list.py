@@ -39,10 +39,7 @@ Complexity
 """
 from typing import Optional
 
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+from linked_list_util import ListNode, create_linked_list, print_linked_list
 
 def reorder_linked_list(head:ListNode) -> None:
     # two nodes or less, no need to redorder (edge case)
@@ -50,8 +47,8 @@ def reorder_linked_list(head:ListNode) -> None:
         return head # 0 or 1 node
 
     # find the middle by using two pointers where one moves at 2x speed of the other
-    slow, fast = head, head
-    while slow.next and fast.next and fast.next.next:
+    slow, fast = head, head.next
+    while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
 
@@ -59,6 +56,7 @@ def reorder_linked_list(head:ListNode) -> None:
     second = slow.next
     slow.next = None
 
+    # reversing the second
     prev = None
     while second:
         next = second.next
@@ -66,6 +64,7 @@ def reorder_linked_list(head:ListNode) -> None:
         prev = second
         second = next
 
+    # prev points the new head
     second = prev
     print(f" print out the second (starting from the middle) after reversing")
     print_linked_list(second)
@@ -121,29 +120,9 @@ def reverse_linked_list(head:ListNode) -> ListNode:
         current = next
     return prev
 
-def print_linked_list(head:ListNode) -> None:
-    tmp = head
-    while tmp:
-        print(f"{tmp.val}", end="->")
-        tmp = tmp.next
-    print("null")
 
-def create_linked_list(vals:list[int]) -> ListNode:
-    if not vals:
-        return None
 
-    tmp = None
-    head = None
-    for idx, val in enumerate(vals):
-        
-        if idx == 0:
-            tmp = ListNode(val)
-            head = tmp
-        else:
-            tmp.next = ListNode(val)
-            tmp = tmp.next        
 
-    return head
 
 def test_reorder_linked_list(vals:list[int]) -> None:
     print(f"{'>' * 6} test_reorder_linked_list: {vals}  {'<' * 6}")
