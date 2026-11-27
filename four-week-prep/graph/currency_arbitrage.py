@@ -100,20 +100,30 @@ def find_arbitrage(rates: list[tuple[str, str, float]]) -> Optional[list[str]]:
         return None
 
    # After the n-th round, last_node is the last node whose cost improved, that proves a negative cycle exists
-   # last_node can hang off the cycle
-   # step back until inside the cycle
+   # however, last_node can hang off the cycle
+   # to step back until inside the cycle
    # make sure the cycle-tracing code starts from a node that's actually on the cycle
+   """
+   Why n steps is always enough
+     - Following parent pointers from last_node eventually enters the cycle and then goes around it forever.
+     - The tail before the cycle has distinct nodes, and there are only n nodes in total, so the tail is at most n − 1 steps long.
+     - After n steps you've used up any possible tail and are on the cycle. Taking extra steps does no harm, 
+       because once you're on the cycle each step just moves you around it
+   """
    for _ in range(currency_no):
       last_node = parent[last_node]
 
-   cycle: list[int] = [last_node]
+   # start the cycle w/ the last_node, which is in the loop
+   cycle: list[int] = [last_node] # add last_node to the beginning of the list
+   # start from this last node
    curr: int = parent[last_node]
 
-   while curr != last_node:
+   # From a node guaranteed to be on the cycle, the trace loop follows parents until it comes back to that node, collecting exactly the cycle's nodes
+   while curr != last_node:  # walk upward until we loop around it to the same starting point of last_node
       cycle.append(curr)
       curr = parent[curr]
 
-   cycle.append(last_node)
+   cycle.append(last_node) # close the loop
    # reverse the list in place, while cycle[::-1] builds a new list, this works for any sequence (lists, strings, tuples)
    # The choice usually comes down to whether you need the original list:
    cycle.reverse()
