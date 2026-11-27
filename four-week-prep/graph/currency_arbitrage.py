@@ -99,7 +99,10 @@ def find_arbitrage(rates: list[tuple[str, str, float]]) -> Optional[list[str]]:
        if last_node == -1:  # no changes, therefore no negative cyles
         return None
 
+   # After the n-th round, last_node is the last node whose cost improved, that proves a negative cycle exists
+   # last_node can hang off the cycle
    # step back until inside the cycle
+   # make sure the cycle-tracing code starts from a node that's actually on the cycle
    for _ in range(currency_no):
       last_node = parent[last_node]
 
@@ -111,6 +114,8 @@ def find_arbitrage(rates: list[tuple[str, str, float]]) -> Optional[list[str]]:
       curr = parent[curr]
 
    cycle.append(last_node)
+   # reverse the list in place, while cycle[::-1] builds a new list, this works for any sequence (lists, strings, tuples)
+   # The choice usually comes down to whether you need the original list:
    cycle.reverse()
 
    return [currency_names[i] for i in cycle]
