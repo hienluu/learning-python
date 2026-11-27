@@ -1,5 +1,12 @@
 import heapq
 
+# Every heapq function keeps that rule true:
+#   - heapq.heappush(heap, item) appends the item to the end. It then swaps the item with its parent until the parent is smaller ("sift up").
+#   - heapq.heappop(heap) takes out heap[0], moves the last item to the front, and swaps it with its smaller child until the rule holds again
+#     ("sift down"). Both operations take O(log n) time.
+#   - heapq.heapify(lst) is the only function that converts an arbitrary list into a heap, in O(n) time.
+
+
 def dijkstra(graph: dict[str, list[(str, int)]] , start: str) -> tuple[dict[str, int], dict[str, str]]:
     # distance from start to each node in the graph, initialize to infinity for each node
     dist: dict[str, int] = {node: float('inf') for node in graph}
@@ -54,3 +61,19 @@ if __name__ == "__main__":
     distances, previous = dijkstra(graph, start_node)
     print(distances)
     print(previous)
+
+    # having fun with heapq.
+    import heapq
+
+    h = []
+    for x in [5, 7, 9, 1, 3]:
+        heapq.heappush(h, x)
+
+    
+    print(f"after pushing elements to heap: {h}")
+    print("=====> popping elements from heap:")
+    while h:
+        print(heapq.heappop(h))
+
+    print("=====> after popping elements from heap:")
+    print(h)
